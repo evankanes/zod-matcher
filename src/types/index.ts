@@ -2,7 +2,7 @@ import { ZodType } from 'zod';
 import { MatcherError } from '../error';
 import { UnionToArray } from './union-to-array';
 
-export type Mapper<Input, Output> = Output | ((input: Input) => Output);
+export type Mapper<Input, Output> = (input: Input) => Output;
 
 export type Case<Schema extends ZodType, Map> = {
   schema: Schema;

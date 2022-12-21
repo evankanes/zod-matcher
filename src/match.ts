@@ -18,15 +18,18 @@ type Matcher<Input, Cases extends CasesType> = {
     schema: Schema,
     map: Map | Output,
   ) => Matcher<Input, [...Cases, Case<Schema, Map | Output>]>;
+
   default: <Output, Map extends Mapper<Input, Output>>(
-    map: Map,
-  ) => Matcher<Input, [...Cases, Case<ZodUnknown, Map>]>;
+    map: Map | Output,
+  ) => Matcher<Input, [...Cases, Case<ZodUnknown, Map | Output>]>;
+
   parse: IsUnhandled<Input, Cases> extends never
     ? () => Result<Cases>
     : {
         message: 'Unhandled cases. Add more cases or add default';
         missing: IsUnhandled<Input, Cases>;
       };
+
   safeParse: IsUnhandled<Input, Cases> extends never
     ? () => SafeParseResult<Result<Cases>>
     : {
@@ -45,7 +48,7 @@ const matcher = <Input, Cases extends CasesType>(
   safeParse: (() => safeParse(input, cases)) as any,
 });
 
-export const match = <Input>(input: Input) => matcher(input, []);
+export const match = <Input>(input: Input) => matcher<Input, []>(input, []);
 
 const safeParse = <Cases extends CasesType>(
   input: unknown,
