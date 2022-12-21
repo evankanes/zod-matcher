@@ -2,7 +2,7 @@
   "name": "zod-matcher",
   "version": "1.0.0",
   "author": "Evan Kanes",
-  "description": "Rust inspired matcher for Zod schemas",
+  "description": "Rust inspired pattern matching for Zod schemas",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "license": "MIT",

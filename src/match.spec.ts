@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { match } from ".";
+import { match } from "./match";
 import { MatcherError } from "./error";
 
 const identity = <A>(a: A) => a;
