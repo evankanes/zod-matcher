@@ -68,27 +68,11 @@ it.each(cases)('Should safely fail parse $name', ({ input, schema }) => {
   });
 });
 
-it('Case map without function', () => {
-  const result = match('A' as const)
-    .case(z.literal('A'), 'A' as const)
-    .parse();
-
-  expect(result).toBe('A');
-});
-
-it('Default map without function', () => {
-  const result = match('A' as const)
-    .default('B' as const)
-    .parse();
-
-  expect(result).toBe('B');
-});
-
 it('Default should narrow input', () => {
   const result = match('A' as 'A' | 'B' | 'C')
-    .case(z.literal('A'), 'A' as const)
+    .case(z.literal('A'), () => 'A' as const)
     .case(z.literal('B'), () => 'B' as const)
-    .default(a => a)
+    .default(type => type)
     .parse();
 
   expect(result).toBe('A');

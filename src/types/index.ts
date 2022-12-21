@@ -39,9 +39,7 @@ export type Result<
       Items,
       [
         Items[Acc['length']] extends (...a: any[]) => any
-          ? ReturnType<Items[Acc['length']]> extends (...a: any[]) => any
-            ? ReturnType<ReturnType<Items[Acc['length']]>>
-            : ReturnType<Items[Acc['length']]>
+          ? ReturnType<Items[Acc['length']]>
           : Items[Acc['length']],
         ...Acc,
       ]

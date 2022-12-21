@@ -15,16 +15,16 @@ type CaseType<Input, Cases extends CasesType> = <
   Map extends Mapper<Schema['_type'], Output>,
 >(
   schema: Schema,
-  map: Map | Output,
-) => Matcher<Input, [...Cases, Case<Schema, Map | (() => Output)>]>;
+  map: Map,
+) => Matcher<Input, [...Cases, Case<Schema, Map>]>;
 
 type DefaultType<Input, Cases extends CasesType> = <
   Output,
   Map extends Mapper<Exclude<Input, Result<Cases>>, Output>,
 >(
-  map: Map | Output,
+  map: Map,
 ) => Omit<
-  Matcher<Input, [...Cases, Case<ZodUnknown, Map | (() => Output)>]>,
+  Matcher<Input, [...Cases, Case<ZodUnknown, Map>]>,
   'case' | 'default'
 >;
 
@@ -34,7 +34,7 @@ type ParseType<Input, Cases extends CasesType> = IsUnhandled<
 > extends never
   ? () => Result<Cases>
   : {
-      message: 'Unhandled cases. Add more cases or add default';
+      message: 'Unhandled cases. Add more cases or add default.';
       missing: IsUnhandled<Input, Cases>;
     };
 
@@ -44,7 +44,7 @@ type SafeParseType<Input, Cases extends CasesType> = IsUnhandled<
 > extends never
   ? () => SafeParseResult<Result<Cases>>
   : {
-      message: 'Unhandled cases. Add more cases or add default';
+      message: 'Unhandled cases. Add more cases or add default.';
       missing: IsUnhandled<Input, Cases>;
     };
 
@@ -53,14 +53,14 @@ type Matcher<Input, Cases extends CasesType> = {
    * @param schema
    * Zod schema to match against.
    * @param map
-   * Value or function that passes type of schema as argument.
+   * Function passes type of schema as argument.
    */
   case: CaseType<Input, Cases>;
   /**
    * Fallback if no other cases match.
    * Can only be used *once* after all other cases.
    * @param map
-   * Value or function that passes narrowed type of schema as argument.
+   * Function passes narrowed type of schema as argument.
    */
   default: DefaultType<Input, Cases>;
   /**
@@ -80,16 +80,12 @@ const matcher = <Input, Cases extends CasesType>(
   input: Input,
   cases: Cases,
 ): Matcher<Input, Cases> => ({
-  case: (schema, map) =>
-    matcher(input, [
-      ...cases,
-      { schema, map: map instanceof Function ? map : () => map },
-    ]),
+  case: (schema, map) => matcher(input, [...cases, { schema, map }]),
 
   default: (map => {
     const { parse, safeParse } = matcher(input, [
       ...cases,
-      { schema: z.unknown(), map: map instanceof Function ? map : () => map },
+      { schema: z.unknown(), map },
     ]);
     return { parse, safeParse };
   }) as DefaultType<Input, Cases>,
