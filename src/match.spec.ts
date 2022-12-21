@@ -1,88 +1,86 @@
-import { z } from "zod";
-import { match } from "./match";
-import { MatcherError } from "./error";
+import { z } from 'zod';
+import { match } from './match';
+import { MatcherError } from './error';
 
 const identity = <A>(a: A) => a;
 
-const wrongSchema = z.object({ _: z.literal("_") }) as any;
+const wrongSchema = z.object({ _: z.literal('_') }) as any;
 
 const cases = [
   {
-    name: "string",
-    input: "abc",
+    name: 'string',
+    input: 'abc',
     schema: z.string(),
   },
   {
-    name: "number",
+    name: 'number',
     input: 12345,
     schema: z.number(),
   },
   {
-    name: "not a number",
+    name: 'not a number',
     input: NaN,
     schema: z.nan(),
   },
   {
-    name: "boolean",
+    name: 'boolean',
     input: true,
     schema: z.boolean(),
   },
   {
-    name: "date",
+    name: 'date',
     input: new Date(),
     schema: z.date(),
   },
   {
-    name: "object",
-    input: { a: "a" },
+    name: 'object',
+    input: { a: 'a' },
     schema: z.object({ a: z.string() }),
   },
   {
-    name: "array",
-    input: ["a"],
+    name: 'array',
+    input: ['a'],
     schema: z.array(z.string()),
   },
 ];
 
-it.each(cases)("Should parse $name", ({ input, schema }) => {
+it.each(cases)('Should parse $name', ({ input, schema }) => {
   expect(match(input).case(schema, identity).parse()).toStrictEqual(input);
 });
 
-it.each(cases)("Should throw fail parse $name", ({ input, schema }) => {
+it.each(cases)('Should throw fail parse $name', ({ input, schema }) => {
   expect(() => match(input).case(wrongSchema, identity).parse()).toThrowError(
-    MatcherError
+    MatcherError,
   );
 });
 
-it.each(cases)("Should safely parse $name", ({ input, schema }) => {
+it.each(cases)('Should safely parse $name', ({ input, schema }) => {
   expect(match(input).case(schema, identity).safeParse()).toStrictEqual({
     success: true,
     data: input,
   });
 });
 
-it.each(cases)("Should safely fail parse $name", ({ input, schema }) => {
+it.each(cases)('Should safely fail parse $name', ({ input, schema }) => {
   expect(match(input).case(wrongSchema, identity).safeParse()).toStrictEqual({
     success: false,
     error: expect.any(MatcherError),
   });
 });
 
-
-
 it('Case map without function', () => {
   const result = match('a' as const)
-  .case(z.literal('a'), '1' as const)
-  .case(z.literal('b'), () => '2' as const)
-  .parse()
+    .case(z.literal('a'), '1' as const)
+    .case(z.literal('b'), () => '2' as const)
+    .parse();
 
-  expect(result).toBe('1')
-})
+  expect(result).toBe('1');
+});
 
 it('Default map without function', () => {
   const result = match('a' as const)
-  .default('1')
-  .parse()
+    .default('1')
+    .parse();
 
-  expect(result).toBe('1')
-})
+  expect(result).toBe('1');
+});

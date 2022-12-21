@@ -1,7 +1,7 @@
-import { CasesType } from "./types";
+import { CasesType } from './types';
 
 export class MatcherError extends Error {
-  name = "MatcherError";
+  name = 'MatcherError';
   constructor(input: unknown, cases: CasesType) {
     super(
       JSON.stringify(
@@ -10,8 +10,8 @@ export class MatcherError extends Error {
           cases: cases.map(({ schema }) => schema),
         },
         null,
-        2
-      )
+        2,
+      ),
     );
     Object.setPrototypeOf(this, MatcherError.prototype);
   }
