@@ -6,6 +6,11 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "license": "MIT",
+  "keywords": ["matching", "match", "matcher", "pattern-matching", "zod"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/evankanes/zod-matcher"
+  },
   "files": [
     "dist"
   ],
