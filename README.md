@@ -2,6 +2,15 @@
 
 Rust inspired **pattern matching** for Zod schemas
 
+## Installation
+```bash
+yarn add zod-matcher
+```
+```bash
+npm install zod-matcher
+```
+
+## Basic usage
 Example match in Rust
 ``` rust
 let x = 1;
