@@ -17,11 +17,11 @@ type Matcher<Input, Cases extends CasesType> = {
   >(
     schema: Schema,
     map: Map | Output,
-  ) => Matcher<Input, [...Cases, Case<Schema, Map | Output>]>;
+  ) => Matcher<Input, [...Cases, Case<Schema, Map | (() => Output)>]>;
 
   default: <Output, Map extends Mapper<Input, Output>>(
     map: Map | Output,
-  ) => Matcher<Input, [...Cases, Case<ZodUnknown, Map | Output>]>;
+  ) => Matcher<Input, [...Cases, Case<ZodUnknown, Map | (() => Output)>]>;
 
   parse: IsUnhandled<Input, Cases> extends never
     ? () => Result<Cases>
@@ -42,9 +42,20 @@ const matcher = <Input, Cases extends CasesType>(
   input: Input,
   cases: Cases,
 ): Matcher<Input, Cases> => ({
-  case: (schema, map) => matcher(input, [...cases, { schema, map }]),
-  default: map => matcher(input, [...cases, { schema: z.unknown(), map }]),
+  case: (schema, map) =>
+    matcher(input, [
+      ...cases,
+      { schema, map: map instanceof Function ? map : () => map },
+    ]),
+
+  default: map =>
+    matcher(input, [
+      ...cases,
+      { schema: z.unknown(), map: map instanceof Function ? map : () => map },
+    ]),
+
   parse: (() => parse(input, cases)) as any,
+
   safeParse: (() => safeParse(input, cases)) as any,
 });
 
