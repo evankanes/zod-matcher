@@ -3,6 +3,7 @@ import { MatcherError } from './error';
 import {
   Case,
   CasesType,
+  HandledCases,
   IsUnhandled,
   Mapper,
   Result,
@@ -20,7 +21,7 @@ type CaseType<Input, Cases extends CasesType> = <
 
 type DefaultType<Input, Cases extends CasesType> = <
   Output,
-  Map extends Mapper<Exclude<Input, Result<Cases>>, Output>,
+  Map extends Mapper<Exclude<Input, HandledCases<Cases>>, Output>,
 >(
   map: Map,
 ) => Omit<

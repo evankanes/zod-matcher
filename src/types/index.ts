@@ -44,3 +44,20 @@ export type Result<
         ...Acc,
       ]
     >;
+
+export type HandledCases<
+  Cases extends CasesType,
+  Items extends unknown[] = UnionToArray<Cases[number]['schema']['_type']>,
+  Acc extends unknown[] = [],
+> = Items['length'] extends Acc['length']
+  ? Acc[number]
+  : Result<
+      Cases,
+      Items,
+      [
+        Items[Acc['length']] extends (...a: any[]) => any
+          ? ReturnType<Items[Acc['length']]>
+          : Items[Acc['length']],
+        ...Acc,
+      ]
+    >;
