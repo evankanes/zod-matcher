@@ -79,7 +79,7 @@ it('Case map without function', () => {
 
 it('Default map without function', () => {
   const result = match('a' as const)
-    .default('1')
+    .default('1' as const)
     .parse();
 
   expect(result).toBe('1');

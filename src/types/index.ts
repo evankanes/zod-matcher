@@ -33,7 +33,7 @@ export type Result<
   Items extends unknown[] = UnionToArray<Cases[number]['map']>,
   Acc extends unknown[] = [],
 > = Items['length'] extends Acc['length']
-  ? Acc
+  ? Acc[number]
   : Result<
       Cases,
       Items,
