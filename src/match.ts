@@ -17,7 +17,14 @@ type CaseType<Input, Cases extends CasesType> = <
 >(
   schema: Schema,
   map: Map,
-) => Matcher<Input, [...Cases, Case<Schema, Map>]>;
+) => IsUnhandled<Input, [...Cases, Case<Schema, Map>]> extends never
+  ? Pick<
+      Matcher<Input, [...Cases, Case<Schema, Map>]>,
+      'parse' | 'safeParse'
+    > & {
+      _allCasesHandled?: 'All possible cases already handled!';
+    }
+  : Matcher<Input, [...Cases, Case<Schema, Map>]>;
 
 type DefaultType<Input, Cases extends CasesType> = <
   Output,
@@ -35,8 +42,8 @@ type ParseType<Input, Cases extends CasesType> = IsUnhandled<
 > extends never
   ? () => Result<Cases>
   : {
-      message: 'Unhandled cases. Add more cases or add default.';
-      missing: IsUnhandled<Input, Cases>;
+      _message: 'Unhandled cases. Add more cases or add default.';
+      _missing: IsUnhandled<Input, Cases>;
     };
 
 type SafeParseType<Input, Cases extends CasesType> = IsUnhandled<
@@ -45,8 +52,8 @@ type SafeParseType<Input, Cases extends CasesType> = IsUnhandled<
 > extends never
   ? () => SafeParseResult<Result<Cases>>
   : {
-      message: 'Unhandled cases. Add more cases or add default.';
-      missing: IsUnhandled<Input, Cases>;
+      _message: 'Unhandled cases. Add more cases or add default.';
+      _missing: IsUnhandled<Input, Cases>;
     };
 
 type Matcher<Input, Cases extends CasesType> = {
