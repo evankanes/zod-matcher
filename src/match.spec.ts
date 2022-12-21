@@ -67,3 +67,22 @@ it.each(cases)("Should safely fail parse $name", ({ input, schema }) => {
     error: expect.any(MatcherError),
   });
 });
+
+
+
+it('Case map without function', () => {
+  const result = match('a' as const)
+  .case(z.literal('a'), '1' as const)
+  .case(z.literal('b'), () => '2' as const)
+  .parse()
+
+  expect(result).toBe('1')
+})
+
+it('Default map without function', () => {
+  const result = match('a' as const)
+  .default('1')
+  .parse()
+
+  expect(result).toBe('1')
+})
