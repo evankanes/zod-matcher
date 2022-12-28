@@ -92,18 +92,6 @@ const result = match(x)
   .parse();
 ```
 
-### No unnecessary cases!
-If all possible cases are already accounted for we remove the option to add more.
-
-``` typescript
-const x = 'A' as const
-
-const result = match(x)
-  .case(z.literal('A'), console.log)
-  .case(z.literal('B'), console.log) // <== Error. All cases already handled
-  .parse();
-```
-
 ### Safe parsing
 You can throw on failed matches using .parse() or return a result union with .safeParse().
 
