@@ -17,14 +17,7 @@ type CaseType<Input, Cases extends CasesType> = <
 >(
   schema: Schema,
   map: Map,
-) => IsUnhandled<Input, [...Cases, Case<Schema, Map>]> extends never
-  ? Pick<
-      Matcher<Input, [...Cases, Case<Schema, Map>]>,
-      'parse' | 'safeParse'
-    > & {
-      _allCasesHandled?: 'All possible cases already handled!';
-    }
-  : Matcher<Input, [...Cases, Case<Schema, Map>]>;
+) => Matcher<Input, [...Cases, Case<Schema, Map>]>;
 
 type DefaultType<Input, Cases extends CasesType> = <
   Output,
