@@ -1,6 +1,6 @@
 {
   "name": "zod-matcher",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Evan Kanes",
   "description": "Rust inspired pattern matching for Zod schemas",
   "main": "dist/cjs/index.js",

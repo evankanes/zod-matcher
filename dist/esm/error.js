@@ -25,7 +25,7 @@ var MatcherError = /** @class */ (function (_super) {
                 var schema = _a.schema;
                 return schema;
             }),
-        }, null, 2)) || this;
+        }, undefined, 2)) || this;
         _this.name = 'MatcherError';
         Object.setPrototypeOf(_this, MatcherError.prototype);
         return _this;

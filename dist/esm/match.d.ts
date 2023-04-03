@@ -1,5 +1,5 @@
-import { ZodType, ZodUnknown } from 'zod';
-import { Case, CasesType, HandledCases, IsUnhandled, Mapper, Result, SafeParseResult } from './types';
+import type { ZodType, ZodUnknown } from 'zod';
+import type { Case, CasesType, HandledCases, IsUnhandled, Mapper, Result, SafeParseResult } from './types';
 type CaseType<Input, Cases extends CasesType> = <Schema extends ZodType, Output, Map extends Mapper<Schema['_type'], Output>>(schema: Schema, map: Map) => Matcher<Input, [...Cases, Case<Schema, Map>]>;
 type DefaultType<Input, Cases extends CasesType> = <Output, Map extends Mapper<Exclude<Input, HandledCases<Cases>>, Output>>(map: Map) => Omit<Matcher<Input, [...Cases, Case<ZodUnknown, Map>]>, 'case' | 'default'>;
 type ParseType<Input, Cases extends CasesType> = IsUnhandled<Input, Cases> extends never ? () => Result<Cases> : {
@@ -10,7 +10,7 @@ type SafeParseType<Input, Cases extends CasesType> = IsUnhandled<Input, Cases> e
     _message: 'Unhandled cases. Add more cases or add default.';
     _missing: IsUnhandled<Input, Cases>;
 };
-type Matcher<Input, Cases extends CasesType> = {
+interface Matcher<Input, Cases extends CasesType> {
     /**
      * @param schema
      * Zod schema to match against.
@@ -36,6 +36,6 @@ type Matcher<Input, Cases extends CasesType> = {
      * | { success: false, error: MatcherError }
      */
     safeParse: SafeParseType<Input, Cases>;
-};
+}
 export declare const match: <Input>(input: Input) => Matcher<Input, []>;
 export {};
