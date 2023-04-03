@@ -9,7 +9,7 @@ export class MatcherError extends Error {
           input,
           cases: cases.map(({ schema }) => schema),
         },
-        null,
+        undefined,
         2,
       ),
     );

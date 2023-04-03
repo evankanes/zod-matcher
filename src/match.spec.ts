@@ -14,12 +14,12 @@ const cases = [
   },
   {
     name: 'number',
-    input: 12345,
+    input: 12_345,
     schema: z.number(),
   },
   {
     name: 'not a number',
-    input: NaN,
+    input: Number.NaN,
     schema: z.nan(),
   },
   {

@@ -31,33 +31,33 @@ export type SafeParseResult<Data> = SafeParseSuccess<Data> | SafeParseError;
 export type Result<
   Cases extends CasesType,
   Items extends unknown[] = UnionToArray<Cases[number]['map']>,
-  Acc extends unknown[] = [],
-> = Items['length'] extends Acc['length']
-  ? Acc[number]
+  Accumulator extends unknown[] = [],
+> = Items['length'] extends Accumulator['length']
+  ? Accumulator[number]
   : Result<
       Cases,
       Items,
       [
-        Items[Acc['length']] extends (...a: any[]) => any
-          ? ReturnType<Items[Acc['length']]>
-          : Items[Acc['length']],
-        ...Acc,
+        Items[Accumulator['length']] extends (...a: any[]) => any
+          ? ReturnType<Items[Accumulator['length']]>
+          : Items[Accumulator['length']],
+        ...Accumulator,
       ]
     >;
 
 export type HandledCases<
   Cases extends CasesType,
   Items extends unknown[] = UnionToArray<Cases[number]['schema']['_type']>,
-  Acc extends unknown[] = [],
-> = Items['length'] extends Acc['length']
-  ? Acc[number]
+  Accumulator extends unknown[] = [],
+> = Items['length'] extends Accumulator['length']
+  ? Accumulator[number]
   : Result<
       Cases,
       Items,
       [
-        Items[Acc['length']] extends (...a: any[]) => any
-          ? ReturnType<Items[Acc['length']]>
-          : Items[Acc['length']],
-        ...Acc,
+        Items[Accumulator['length']] extends (...a: any[]) => any
+          ? ReturnType<Items[Accumulator['length']]>
+          : Items[Accumulator['length']],
+        ...Accumulator,
       ]
     >;
