@@ -1,5 +1,5 @@
 import type { ZodType, ZodUnknown } from 'zod';
-import { z } from 'zod';
+import { unknown } from 'zod';
 import { MatcherError } from './error';
 import type {
   Case,
@@ -116,7 +116,7 @@ const matcher = <Input, Cases extends CasesType>(
   default: (map => {
     const { parse, safeParse } = matcher(input, [
       ...cases,
-      { schema: z.unknown(), map },
+      { schema: unknown(), map },
     ]);
     return { parse, safeParse };
   }) as DefaultType<Input, Cases>,
