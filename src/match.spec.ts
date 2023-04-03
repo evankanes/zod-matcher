@@ -1,10 +1,11 @@
+import type { ZodSchema } from 'zod';
 import { z } from 'zod';
 import { match } from './match';
 import { MatcherError } from './error';
 
 const identity = <A>(a: A) => a;
 
-const wrongSchema = z.object({ _: z.literal('_') }) as any;
+const wrongSchema = z.object({ _: z.literal('_') }) as ZodSchema;
 
 const cases = [
   {
@@ -48,7 +49,7 @@ it.each(cases)('Should parse $name', ({ input, schema }) => {
   expect(match(input).case(schema, identity).parse()).toStrictEqual(input);
 });
 
-it.each(cases)('Should throw fail parse $name', ({ input, schema }) => {
+it.each(cases)('Should throw fail parse $name', ({ input }) => {
   expect(() => match(input).case(wrongSchema, identity).parse()).toThrowError(
     MatcherError,
   );
@@ -61,7 +62,7 @@ it.each(cases)('Should safely parse $name', ({ input, schema }) => {
   });
 });
 
-it.each(cases)('Should safely fail parse $name', ({ input, schema }) => {
+it.each(cases)('Should safely fail parse $name', ({ input }) => {
   expect(match(input).case(wrongSchema, identity).safeParse()).toStrictEqual({
     success: false,
     error: expect.any(MatcherError),

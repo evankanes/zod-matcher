@@ -1,8 +1,9 @@
-import { CasesType } from './types';
+import type { CasesType } from './types';
 
 export class MatcherError extends Error {
-  name = 'MatcherError';
-  constructor(input: unknown, cases: CasesType) {
+  public name = 'MatcherError';
+
+  public constructor(input: unknown, cases: CasesType) {
     super(
       JSON.stringify(
         {

@@ -1,6 +1,7 @@
-import { z, ZodType, ZodUnknown } from 'zod';
+import type { ZodType, ZodUnknown } from 'zod';
+import { z } from 'zod';
 import { MatcherError } from './error';
-import {
+import type {
   Case,
   CasesType,
   HandledCases,
@@ -49,7 +50,7 @@ type SafeParseType<Input, Cases extends CasesType> = IsUnhandled<
       _missing: IsUnhandled<Input, Cases>;
     };
 
-type Matcher<Input, Cases extends CasesType> = {
+interface Matcher<Input, Cases extends CasesType> {
   /**
    * @param schema
    * Zod schema to match against.
@@ -75,28 +76,7 @@ type Matcher<Input, Cases extends CasesType> = {
    * | { success: false, error: MatcherError }
    */
   safeParse: SafeParseType<Input, Cases>;
-};
-
-const matcher = <Input, Cases extends CasesType>(
-  input: Input,
-  cases: Cases,
-): Matcher<Input, Cases> => ({
-  case: (schema, map) => matcher(input, [...cases, { schema, map }]),
-
-  default: (map => {
-    const { parse, safeParse } = matcher(input, [
-      ...cases,
-      { schema: z.unknown(), map },
-    ]);
-    return { parse, safeParse };
-  }) as DefaultType<Input, Cases>,
-
-  parse: (() => parse(input, cases)) as any,
-
-  safeParse: (() => safeParse(input, cases)) as any,
-});
-
-export const match = <Input>(input: Input) => matcher<Input, []>(input, []);
+}
 
 const safeParse = <Cases extends CasesType>(
   input: unknown,
@@ -126,3 +106,24 @@ const parse = <Cases extends CasesType>(
   if (result.success) return result.data;
   throw result.error;
 };
+
+const matcher = <Input, Cases extends CasesType>(
+  input: Input,
+  cases: Cases,
+): Matcher<Input, Cases> => ({
+  case: (schema, map) => matcher(input, [...cases, { schema, map }]),
+
+  default: (map => {
+    const { parse, safeParse } = matcher(input, [
+      ...cases,
+      { schema: z.unknown(), map },
+    ]);
+    return { parse, safeParse };
+  }) as DefaultType<Input, Cases>,
+
+  parse: (() => parse(input, cases)) as any,
+
+  safeParse: (() => safeParse(input, cases)) as any,
+});
+
+export const match = <Input>(input: Input) => matcher<Input, []>(input, []);
