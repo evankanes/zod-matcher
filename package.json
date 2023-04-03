@@ -24,8 +24,8 @@
     "test": "jest src",
     "format": "yarn prettier --write .",
     "build": "rm -rf dist/ && yarn format && yarn build:esm && yarn build:cjs",
-    "build:esm": "tsc --outDir dist/esm",
-    "build:cjs": "tsc --outDir dist/cjs --module CommonJS"
+    "build:esm": "tsc --project tsconfig.build.json --outDir dist/esm",
+    "build:cjs": "tsc --project tsconfig.build.json --outDir dist/cjs --module CommonJS"
   },
   "dependencies": {
     "zod": "^3.20.2"
